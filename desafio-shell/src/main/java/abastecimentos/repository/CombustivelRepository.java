@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import abastecimentos.model.Combustivel;
 
 @Repository
-public interface CombustivelRepository extends JpaRepository<Combustivel, String>{
+public interface CombustivelRepository extends JpaRepository<Combustivel, Integer>{
 
 }
