@@ -2,6 +2,7 @@ package abastecimentos.model;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,7 +37,8 @@ public class Abastecimentos {
 	
 	@Column(name = "valor_total")
 	private Double valorTotal;
-	
+
+	@JsonBackReference(value = "bomba-abastecimento")
 	@ManyToOne
 	@JoinColumn(name = "bomba_id")
 	private BombasCombustivel bombasCombustivel;

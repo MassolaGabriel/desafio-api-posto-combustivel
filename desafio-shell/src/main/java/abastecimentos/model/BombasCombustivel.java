@@ -2,6 +2,8 @@ package abastecimentos.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,11 +30,13 @@ public class BombasCombustivel {
 	
 	@Column(name = "nome_da_bomba", unique = true)
 	private String nomeDaBomba;
-	
+
+	@JsonBackReference(value = "combustivel-bomba")
 	@ManyToOne
 	@JoinColumn(name = "tipo_combustivel_nome")
 	private Combustivel combustivel;
-	
+
+	@JsonManagedReference(value = "bomba-abastecimento")
 	@OneToMany(mappedBy = "bombasCombustivel")
 	private List<Abastecimentos> abastecimentos;
 }

@@ -2,6 +2,7 @@ package abastecimentos.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -26,6 +27,7 @@ public class Combustivel {
 	private Double precoLitro;
 	
 //	Relacionando combustivel pode estar em diversas bombas
+	@JsonManagedReference(value = "bombas-combustivel")
 	@OneToMany(mappedBy = "combustivel")
 	private List<BombasCombustivel> bombas;
 }
