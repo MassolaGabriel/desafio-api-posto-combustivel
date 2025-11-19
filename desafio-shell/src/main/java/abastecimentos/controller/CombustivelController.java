@@ -3,6 +3,7 @@ package abastecimentos.controller;
 import java.util.List;
 import java.util.Optional;
 
+import abastecimentos.service.CombustivelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,60 +17,38 @@ import jakarta.validation.Valid;
 public class CombustivelController {
 
 	@Autowired
-	private CombustivelRepository combustivelRepository;
+	private CombustivelService combustivelService;
 
-	// 1. CRIAR (POST)
-	@PostMapping
-	public ResponseEntity<Combustivel> cadastrarCombustivel(@Valid @RequestBody Combustivel novoCombustivel) {
-		Combustivel combustivelSalvo = combustivelRepository.save(novoCombustivel);
-		// Retorna 201 Created (Melhor prática REST)
-		return ResponseEntity.status(201).body(combustivelSalvo);
-	}
-
-	// 2. LISTAR TODOS (GET)
 	@GetMapping
-	public ResponseEntity<List<Combustivel>> listarTiposCombustiveis() {
-		List<Combustivel> lista = combustivelRepository.findAll();
-		return ResponseEntity.ok(lista);
+	public List<Combustivel> listarTodos() {
+		return combustivelService.listarTodos();
 	}
 
-	// 3. BUSCAR POR ID (GET)
 	@GetMapping("/{id}")
-	public ResponseEntity<Combustivel> buscarPorId(@PathVariable Integer id) {
-		return combustivelRepository.findById(id)
-				.map(ResponseEntity::ok)
+	public ResponseEntity<Combustivel> listarPorId(@PathVariable Integer id) {
+		Optional<Combustivel> combustivel = combustivelService.listarPorId(id);
+		return combustivel.map(ResponseEntity::ok)
 				.orElse(ResponseEntity.notFound().build());
 	}
 
-	// 4. ATUALIZAR (PUT)
-	@PutMapping("/{id}")
-	public ResponseEntity<Combustivel> atualizarCombustivel(@PathVariable Integer id, @Valid @RequestBody Combustivel combustivelAtualizado) {
-		Optional<Combustivel> combustivelExistenteOptional = combustivelRepository.findById(id);
-
-		if (combustivelExistenteOptional.isEmpty()) {
-			return ResponseEntity.notFound().build();
-		}
-
-		Combustivel combustivelExistente = combustivelExistenteOptional.get();
-
-		// Atualiza os dados
-		combustivelExistente.setNome(combustivelAtualizado.getNome());
-		combustivelExistente.setPrecoLitro(combustivelAtualizado.getPrecoLitro());
-
-		Combustivel salvo = combustivelRepository.save(combustivelExistente);
-
-		return ResponseEntity.ok(salvo);
+	@PostMapping
+	public Combustivel salvar(@Valid @RequestBody Combustivel combustivel) {
+		return combustivelService.salvar(combustivel);
 	}
 
-	// 5. DELETAR (DELETE)
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deletarCombustivel(@PathVariable Integer id) {
-		if (!combustivelRepository.existsById(id)) {
+	@PutMapping("/{id}")
+	public ResponseEntity<Combustivel> atualizar(@PathVariable Integer id, @Valid @RequestBody Combustivel combustivelAtualizado) {
+		try {
+			Combustivel combustivel = combustivelService.atualizar(id, combustivelAtualizado);
+			return ResponseEntity.ok(combustivel);
+		}catch (RuntimeException e){
 			return ResponseEntity.notFound().build();
 		}
+	}
 
-		combustivelRepository.deleteById(id);
-
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deletar(@PathVariable Integer id){
+		combustivelService.deletar(id);
 		return ResponseEntity.noContent().build();
 	}
 }

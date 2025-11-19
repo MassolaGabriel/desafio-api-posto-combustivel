@@ -19,7 +19,7 @@ public class Abastecimento {
 	private Integer id;
 
 	@Column(name = "data_hora", nullable = false)
-	private LocalDateTime dataHora; // Data E Hora são importantes em posto
+	private LocalDateTime dataHora;
 
 	@Column(name = "volume_litros", nullable = false)
 	private BigDecimal volumeLitros;
