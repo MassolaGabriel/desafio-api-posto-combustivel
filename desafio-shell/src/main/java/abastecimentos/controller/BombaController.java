@@ -16,8 +16,6 @@ import java.util.Optional;
 public class BombaController {
     @Autowired
     public BombaService bombaService;
-    @Autowired
-    private CombustivelService combustivelService;
 
     @GetMapping
     public List<Bomba> listarTodasBombas(){
@@ -48,7 +46,7 @@ public class BombaController {
 
     @DeleteMapping("/id")
     public ResponseEntity<Void> deletar(@PathVariable Integer id){
-        combustivelService.deletar(id);
+        bombaService.deletar(id);
         return ResponseEntity.noContent().build();
     }
 
