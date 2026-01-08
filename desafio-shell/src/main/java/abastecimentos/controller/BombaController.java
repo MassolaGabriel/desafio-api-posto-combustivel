@@ -44,7 +44,7 @@ public class BombaController {
         }
     }
 
-    @DeleteMapping("/id")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Integer id){
         bombaService.deletar(id);
         return ResponseEntity.noContent().build();
